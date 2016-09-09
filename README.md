@@ -8,7 +8,7 @@ This repo contains Python code for a AWS Lambda function that can be used to man
 
 Please follow these steps to set up a AWS Lambda function.
 
-1. Create a new VPC security group and note the security group Id. Leave the inbound rules empty as they will be managed by the Lambda function.
+1. Create a new VPC security group and note the security group Id and the aws region. Leave the inbound rules empty as they will be managed by the Lambda function.
 2. Clone this repo to your machine, and zip the conent of the repo directory, which you will upload to AWS in the next step. 
     - **Important**: make sure you zip the directory content, not the directory, i.e., the client.py file is at the root of the zip.
 4. Create a new AWS Lambda function. 
@@ -16,7 +16,7 @@ Please follow these steps to set up a AWS Lambda function.
  - Set the runtime of the Lambda function to Python, upload the zipped file, and set the Lambda function handler to `client.lambda_handler`. 
  - Create a new role for the Lambda function.
  - Set the timeout value to 1 min to give enough time for the function to run. 
-5. Create a new AWS policy, and paste in the following json. Make sure you replace the `[accountid-here]` and `[sg-securitygroupid-here]` with your AWS account Id and the security group Id from setp 1.
+5. Create a new AWS policy, paste in the following json, and attach it to the new role. Make sure you replace the `[aws-region]`, `[accountid-here]`, and `[sg-securitygroupid-here]` with your AWS account Id and the security group Id from setp 1.
 
     ```
     {
@@ -44,7 +44,7 @@ Please follow these steps to set up a AWS Lambda function.
                     "ec2:RevokeSecurityGroupIngress"
                 ],
                 "Resource": [
-                    "arn:aws:ec2:us-east-1:[accountid-here]:security-group/[sg-securitygroupid-here]"
+                    "arn:aws:ec2:[aws-region]:[accountid-here]:security-group/[sg-securitygroupid-here]"
                 ]
             },
             {
@@ -65,7 +65,8 @@ Please follow these steps to set up a AWS Lambda function.
     {
         "security_group_id": "security group id created in step 1", 
         "redshift_port": 5439, 
-        "is_vpc": true 
+        "is_vpc": true,
+        "aws_region": "aws region noted in step 1"
     }
     ```
 

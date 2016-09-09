@@ -7,12 +7,14 @@ def lambda_handler(event, context):
     redshift_port = event['redshift_port']
 	# **** Indicate whether your redshift cluster is in VPC or not in input json.
     is_vpc = event['is_vpc']
-    
+    # **** set the aws region of the security group.
+    aws_region = event['aws_region']
+
     r = requests.get('https://2g26abvcj4.execute-api.us-east-1.amazonaws.com/prod/redshift-ips')
     payload = r.json()
     
     if (is_vpc):
-        ec2 = boto3.resource('ec2')
+        ec2 = boto3.resource('ec2', region_name = aws_region)
         security_group = ec2.SecurityGroup(destination_security_group_id)
         ip_permissions = []
         
