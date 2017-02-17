@@ -31,7 +31,7 @@ def lambda_handler(event, context):
         for ip in ips_to_delete:
             try:
                 response = security_group.revoke_ingress(IpProtocol='tcp', FromPort=redshift_port, ToPort=redshift_port, CidrIp=ip)
-                print response
+                print "Deleted IP " + str(ip) + " with response: " + str(response)
             except botocore.exceptions.ClientError as e:
                 print e.response['Error']['Code']
 
@@ -39,7 +39,7 @@ def lambda_handler(event, context):
         for ip in ips_to_add:
             try:
                 response = security_group.authorize_ingress(IpProtocol='tcp',FromPort=redshift_port, ToPort=redshift_port, CidrIp=ip)
-                print response
+                print "Added IP " + str(ip) + " with response: " + str(response)
             except botocore.exceptions.ClientError as e:
                 if e.response['Error']['Code'] == 'InvalidPermission.Duplicate':
                     print 'Entry Already Exists'
@@ -55,7 +55,7 @@ def lambda_handler(event, context):
             create_csg(csgName)
             try:
                 response = client.authorize_cluster_security_group_ingress(ClusterSecurityGroupName=csgName, CIDRIP=ip)
-                print response
+                print "Added IP " + str(ip) + " with response: " + str(response)
             except botocore.exceptions.ClientError as e:
                 if e.response['Error']['Code'] == 'InvalidPermission.Duplicate':
                     print 'Entry Already Exists'
