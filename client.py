@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     # **** set the aws region of the security group.
     aws_region = event['aws_region']
 
-    r = requests.get('https://2g26abvcj4.execute-api.us-east-1.amazonaws.com/prod/redshift-ips')
+    r = requests.get('https://api.mparticle.com/ip-ranges')
     payload = r.json()
 
     trusted_ips = payload['trusted_ips']
